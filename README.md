@@ -1,10 +1,10 @@
-<h2 align='center'><samp>vite-plugin-vscode-nav</samp></h2>
+<h2 align='center'><samp>vite-plugin-editor-nav</samp></h2>
 
 <p align='center'>VS Code navigation for Vite</p>
 
 <p align='center'>
-<a href='https://www.npmjs.com/package/vite-plugin-vscode-nav'>
-<img src='https://img.shields.io/npm/v/vite-plugin-vscode-nav?color=222&style=flat-square'>
+<a href='https://www.npmjs.com/package/vite-plugin-editor-nav'>
+<img src='https://img.shields.io/npm/v/vite-plugin-editor-nav?color=222&style=flat-square'>
 </a>
 </p>
 
@@ -25,7 +25,7 @@
 Install
 
 ```bash
-npm i vite-plugin-vscode-nav -D # yarn add vite-plugin-vscode-nav -D
+npm i vite-plugin-editor-nav -D # yarn add vite-plugin-editor-nav -D
 ```
 
 Add it to `vite.config.js`

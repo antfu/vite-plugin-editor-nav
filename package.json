@@ -1,6 +1,6 @@
 {
-  "name": "vite-plugin-vscode-nav",
-  "description": "VS Code navigation for Vite",
+  "name": "vite-plugin-editor-nav",
+  "description": "Auto navigation with your editor for Vite",
   "version": "0.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -9,10 +9,10 @@
   "author": "antfu <anthonyfu117@hotmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/antfu/vite-plugin-vscode-nav"
+    "url": "https://github.com/antfu/vite-plugin-editor-nav"
   },
-  "homepage": "https://github.com/antfu/vite-plugin-vscode-nav",
-  "bugs": "https://github.com/antfu/vite-plugin-vscode-nav/issues",
+  "homepage": "https://github.com/antfu/vite-plugin-editor-nav",
+  "bugs": "https://github.com/antfu/vite-plugin-editor-nav/issues",
   "files": [
     "dist"
   ],
@@ -25,7 +25,8 @@
     "release": "npx bumpp --commit --tag --push && npm publish"
   },
   "dependencies": {
-    "debug": "^4.3.2"
+    "debug": "^4.3.2",
+    "fast-glob": "^3.2.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.4.3",

@@ -1,38 +1,65 @@
-import type { Plugin } from 'vite'
-import { resolve, relative, join, parse } from 'path'
-import { Options, ResolvedOptions } from './types'
+import { resolve, relative } from 'path'
+import type { Plugin, ResolvedConfig } from 'vite'
+import Debug from 'debug'
+import { FileRouteMap, ResolvedOptions, UserOptions } from './types'
+import Presets from './presets'
 
-const defaultOptions: ResolvedOptions = {
-  router: 'vue',
-  vscodeAsFsPath: '.vscode/.as-fs',
+const debug = Debug('vite-plugin-editor-nav')
+
+function resolveOptions(userOptions: UserOptions): ResolvedOptions {
+  const {
+    preset = 'vue-router',
+    editorStatePath = '.vscode/.as-fs',
+    ...options
+  } = userOptions
+
+  return Object.assign(
+    {},
+    Presets[preset],
+    options,
+    {
+      preset,
+      editorStatePath: resolve(editorStatePath),
+    },
+  )
 }
 
-const ID = 'vite-plugin-vscode-nav/client'
+const ID = 'vite-plugin-editor-nav/client'
 
-function VitePluginComponents(options: Options = {}): Plugin {
-  const config = Object.assign(options, defaultOptions) as ResolvedOptions
-
-  const vscodeAsFsPath = resolve(config.vscodeAsFsPath)
-  const root = join(process.cwd(), 'src/pages')
+function VitePluginEditorNav(userOptions: UserOptions = {}): Plugin {
+  const options = resolveOptions(userOptions)
+  let config: ResolvedConfig
+  let map: FileRouteMap
+  let editorStatePath: string
 
   return {
-    name: 'vite-plugin-vscode-nav',
+    name: 'vite-plugin-editor-nav',
+
+    configResolved(_config) {
+      config = _config
+      editorStatePath = resolve(config.root, options.editorStatePath)
+      debug('editorStatePath', editorStatePath)
+    },
 
     async handleHotUpdate(ctx) {
-      if (relative(vscodeAsFsPath, ctx.file) === 'current-tab/path') {
-        const content = await ctx.read()
-        const path = relative(root, content)
-        if (!path.startsWith('.')) {
-          const { dir, name } = parse(path)
+      if (relative(editorStatePath, ctx.file) === 'current-tab/path') {
+        map = await options.getFileRouteMap(config)
+        debug('map', map)
+
+        const currentTab = await ctx.read()
+        const route = map.find(m => m[0] === currentTab)?.[1]
+        debug('currentTab', currentTab)
+        debug('route', route)
+
+        if (route) {
           ctx.server.ws.send({
             type: 'custom',
             event: 'plugin-vscode-nav',
             data: {
-              to: join(dir, name.toLowerCase())
-            }
+              to: route,
+            },
           })
         }
-        console.log('to:', path.toLowerCase())
       }
     },
 
@@ -44,23 +71,10 @@ function VitePluginComponents(options: Options = {}): Plugin {
       if (id !== ID)
         return null
 
-  // TODO: support other router
-      return `
-export default function(router) {
-  if (!import.meta.hot)
-    return
-  const routes = router.getRoutes()
-  console.log('vscode-nav:routes', routes)
-  import.meta.hot.on('plugin-vscode-nav', (data) => {
-    console.log('vscode-nav:data', data )
-    if (data.to) {
-      router.push(data.to)
-    }
-  })
-}`
+      return options.clientCode
     },
   }
 }
 
 export * from './types'
-export default VitePluginComponents
+export default VitePluginEditorNav

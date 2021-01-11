@@ -1,6 +1,6 @@
 import { UserConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
-import Nav from 'vite-plugin-vscode-nav'
+import Nav from 'vite-plugin-editor-nav'
 import Voie from 'vite-plugin-voie'
 
 const config: UserConfig = {
