@@ -17,4 +17,4 @@ app.use(router)
 app.mount('#app')
 
 // @ts-ignore
-import('vite-plugin-editor-nav/client').then(i => i.default(router, routes))
+import('vite-plugin-editor-nav/client').then(i => i.default(router))

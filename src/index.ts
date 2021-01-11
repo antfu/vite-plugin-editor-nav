@@ -34,6 +34,7 @@ function VitePluginEditorNav(userOptions: UserOptions = {}): Plugin {
 
   return {
     name: 'vite-plugin-editor-nav',
+    enforce: 'pre',
 
     configResolved(_config) {
       config = _config
@@ -71,7 +72,10 @@ function VitePluginEditorNav(userOptions: UserOptions = {}): Plugin {
       if (id !== ID)
         return null
 
-      return options.clientCode
+      if (config.command === 'serve')
+        return options.clientCode
+      else
+        return 'export default function() {}'
     },
   }
 }

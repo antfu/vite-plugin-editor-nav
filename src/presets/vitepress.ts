@@ -4,14 +4,14 @@ import { Options } from '../types'
 
 const options: Options = {
   async getFileRouteMap(config) {
-    const files = await fg('**/*.{js,md,vue}', {
+    const files = await fg('**/*.md', {
       onlyFiles: true,
       cwd: config.root,
     })
 
     return files.map((f) => {
       const { dir, name } = parse(f)
-      return [resolve(config.root, f), join(dir, name).replace(/\/index$/, '/')]
+      return [resolve(config.root, f), `/${join(dir, name).replace(/\/index$/, '/')}`]
     })
   },
 
@@ -20,7 +20,7 @@ export default function(router) {
   if (!import.meta.hot)
     return
   import.meta.hot.on('plugin-vscode-nav', (data) => {
-    console.log('vscode-nav:data', data)
+    console.debug('vscode-nav:data', data)
     if (data.to) {
       router.go(data.to)
     }
