@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-editor-nav",
   "description": "Auto navigation with your editor for Vite",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
