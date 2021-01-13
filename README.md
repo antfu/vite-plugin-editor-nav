@@ -26,11 +26,11 @@
 
 > ℹ️ **Vite 2 is required**
 
-Install
-
 ```bash
 npm i vite-plugin-editor-nav -D # yarn add vite-plugin-editor-nav -D
 ```
+
+> This is a tool for DX and only works in `dev` mode.
 
 ## Configration
 
@@ -50,9 +50,7 @@ Install [VSCode as FS](https://marketplace.visualstudio.com/items?itemName=antfu
 ```
 
 See more details on [the readme page](https://github.com/antfu/vscode-as-fs).
-
 </details>
-<br>
 
 ### Vite
 
@@ -78,6 +76,24 @@ export default {
 }
 ```
 
+Then add this to your `main.js`
+
+```js
+// main.js
+import { createApp } from 'vue'
+import { createRouter } from 'vue-router'
+
+/*...*/
+
+const router = createRouter({ /*...*/ })
+const app = createApp( /*...*/ )
+
+app.use(router)
+
+// pass the vue-router instance to it
+import('vite-plugin-editor-nav/client').then(i => i.default(router))
+```
+
 </details>
 <br>
 
@@ -97,6 +113,21 @@ export default {
       preset: 'vitepress',
     })
   ]
+}
+```
+
+Then add this to `.vitepress/theme/config.js`
+
+```js
+// .vitepress/theme/config.js
+import DefaultTheme from 'vitepress/dist/client/theme-default'
+
+export default {
+  ...DefaultTheme
+  enhanceApp({ app, router }) {
+    // this
+    import('vite-plugin-editor-nav/client').then(i => i.default(router))
+  },
 }
 ```
 
