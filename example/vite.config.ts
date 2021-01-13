@@ -8,7 +8,7 @@ const config: UserConfig = {
     Vue(),
     Voie(),
     Nav({
-      router: 'vue',
+      preset: 'vue-router',
     }),
   ],
 }

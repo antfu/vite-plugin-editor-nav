@@ -1,21 +1,32 @@
 import { resolve, parse, join } from 'path'
 import fg from 'fast-glob'
-import { Options } from '../types'
+import { Options, PresetUserOptions } from '../types'
+import { extensionsToGlob } from '../utils'
 
-const options: Options = {
-  async getFileRouteMap(config) {
-    const files = await fg('**/*.md', {
-      onlyFiles: true,
-      cwd: config.root,
-    })
+export default function({
+  routeBase = '.',
+  extensions = ['md'],
+}: PresetUserOptions): Options {
+  const ext = extensionsToGlob(extensions)
 
-    return files.map((f) => {
-      const { dir, name } = parse(f)
-      return [resolve(config.root, f), `/${join(dir, name).replace(/\/index$/, '/')}`]
-    })
-  },
+  return {
+    async getFileRouteMap(config) {
+      const cwd = resolve(config.root, routeBase)
+      const files = await fg(`**/*.${ext}`, {
+        onlyFiles: true,
+        cwd,
+      })
 
-  clientCode: `
+      return files.map((f) => {
+        const { dir, name } = parse(f)
+        return {
+          filepath: resolve(cwd, f),
+          route: `/${join(dir, name).replace(/\/index$/, '/')}`,
+        }
+      })
+    },
+
+    clientCode: `
 export default function(router) {
   if (!import.meta.hot)
     return
@@ -26,6 +37,5 @@ export default function(router) {
     }
   })
 }`,
+  }
 }
-
-export default options

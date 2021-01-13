@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env DEBUG=vite-plugin-editor-nav:* vite",
-    "build": "cross-env DEBUG=vite-plugin-editor-nav:* vite build"
+    "dev": "cross-env DEBUG=vite-plugin-editor-nav vite",
+    "build": "cross-env DEBUG=vite-plugin-editor-nav vite build"
   },
   "dependencies": {
     "vue": "^3.0.5"

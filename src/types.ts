@@ -1,6 +1,6 @@
 import { ResolvedConfig } from 'vite'
 
-export type FileRouteMap = [string, string][]
+export type FileRouteMap = { filepath: string; route: string }[]
 
 /**
  * Plugin options.
@@ -19,7 +19,12 @@ export interface Options {
 
 export type PresetNames = 'vue-router' | 'vitepress'
 
-export interface UserOptions extends Partial<Options> {
+export interface PresetUserOptions {
+  routeBase?: string
+  extensions?: string[]
+}
+
+export interface UserOptions extends Partial<Options>, PresetUserOptions {
   preset?: PresetNames
 }
 

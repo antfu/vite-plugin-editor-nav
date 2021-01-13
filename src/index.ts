@@ -15,11 +15,11 @@ function resolveOptions(userOptions: UserOptions): ResolvedOptions {
 
   return Object.assign(
     {},
-    Presets[preset],
+    Presets[preset](options),
     options,
     {
       preset,
-      editorStatePath: resolve(editorStatePath),
+      editorStatePath,
     },
   )
 }
@@ -44,11 +44,14 @@ function VitePluginEditorNav(userOptions: UserOptions = {}): Plugin {
 
     async handleHotUpdate(ctx) {
       if (relative(editorStatePath, ctx.file) === 'current-tab/path') {
-        map = await options.getFileRouteMap(config)
-        debug('map', map)
+        // TODO: update the map
+        if (!map) {
+          map = await options.getFileRouteMap(config)
+          debug('map', map)
+        }
 
         const currentTab = await ctx.read()
-        const route = map.find(m => m[0] === currentTab)?.[1]
+        const route = map.find(m => m.filepath === currentTab)?.route
         debug('currentTab', currentTab)
         debug('route', route)
 
